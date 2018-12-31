@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<head>
+    <title>Home</title>
+</head>
+<body>
+    <div id="logo">
+        <h1 id="hello" onclick="hello()">welcome.</h1>
+        <input autocomplete="off" autofocus placeholder="Search DuckDuckGo..." type="text" id="search">
+        <br><br>
+        <div id="activity-bar">
+            <div id="clock">loading...</div>
+            <div id="ac-0" onclick="window.location='https://duckduckgo.com?q='+this.innerHTML" class="btn btn-sm">...</div>
+            <div id="ac-1" onclick="window.location='https://duckduckgo.com?q='+this.innerHTML" class="btn btn-sm">...</div>
+        </div>
+    </div>
+    <p id="tooltip" class="sub">bookmarks</p>
+    <div id="links">
+        
+    </div>
+</body>
+    <style type="text/css">
+        *:not(input) {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        html {
+            background: #eeeeee;
+            color: #222222;
+            font-family: "PT Sans Caption",Helvetica,sans-serif;
+        }
+        .sub {
+            color: grey;
+            text-align: center;
+        }
+        input {
+            border-radius: 5px;
+            background-color: #dedede;
+            width: 50vw;
+            height: 32px;
+            font-size: 20px;
+            padding: 10px;
+            border: none;
+        }
+        input:focus {
+            background: #cdcdcd;
+        }
+        #logo {
+            text-align: center;
+        }
+        .btn {
+            background: #dedede;
+            border-radius: 5px;
+            padding: 10px;
+            display: inline-block;
+            margin: 5px;
+            text-align: center;
+        }
+        .box {
+            width: 50px;
+            height: 50px;
+        }
+        .box:before {
+            content: '';
+            display: inline-block;
+            vertical-align: middle;
+            height: 65px;
+            width: -50px;
+        }
+        .box:after {
+            padding: 8px;
+        }
+        .box>a {
+            color: grey;
+            text-decoration: none;
+            font-size: 30px;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background: #cdcdcd!important;
+            cursor: pointer;
+        }
+        .btn-sm {
+            width: 20vw;
+        }
+        #links {
+            margin: auto;
+            width: 60vw;
+            text-align: center;
+        }
+        #activity-bar {
+            height: 45px;
+        }
+        #ac-0, #ac-1 {
+            display: none;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        #clock {
+            font-size: 30px;
+            color: grey;
+            padding-top: 5px;
+        }
+        #hello {
+            cursor: pointer;
+            font-size: 42px;
+            margin-top: 24vh;
+        }
+        /*html {
+            background: #222222!important;
+            color: #eeeeee!important;
+        }
+        .btn, input {
+            background: #454545;
+        }
+        input:focus {
+            background: #323232!important;
+        }
+        input input {
+            color: #eeeeee;
+        }
+        .btn:hover {
+            background: #545454!important;
+        }*/
+    </style>
+    <script type="text/javascript">
+        // Modified from https://stackoverflow.com/questions/48372057/extract-css-property-from-string-using-javascript
+        function getValue(css, property) {
+            css = ".a113 {" + css + "}";
+            var style = document.createElement('style');
+            style.appendChild(document.createTextNode(css));
+            document.body.appendChild(style);
+            var sheet = style.sheet;
+            style.remove();
+            var rule = Array
+            .from(sheet.cssRules)
+            .find(cssRule => cssRule.selectorText === ".a113");
+
+            if (rule) {
+                return rule.style.getPropertyValue(property);
+            }
+        }
+
+        // Fallbacks
+        var button_focus = "#bcbcbc"
+        var textbox_text = "#000000";
+        var green_color = "green";
+        var blue_color = '#3333ff';
+
+        // Put OpenSkin file here. Please note that nested properties for "casa" are not accepted to improve performance.
+        var openskin = {
+           "name": "Casa Dark",
+           "logo": "https://shuga.co/casa/CasaDark.png",
+           "author": "Shuga",
+           "description": "The default dark mode for the Casa home page.",
+           "styles": [
+             {
+                 "containerBackground": "background:#222222",
+                 "label": "color:#eeeeee",
+                 "caption": "color:grey",
+                 "button": "background:#454545",
+                 "searchbar": "background:#434343;color:#eeeeee",
+                 "icon": "color:darkgrey",
+                 "buttonHover" :"background:#545454!important",
+                 "buttonFocus": "background:#343434!important",
+                 "searchbarFocus": "background:#323232!important",
+                 "greenText": "color:green",
+                 "blueText": "color:teal"
+             }
+           ]
+         }
+
+        try {var button = getValue(openskin.styles[0].button, "background")} catch(e) {}
+        try {var textbox_text = getValue(openskin.styles[0].searchbar, "color")} catch(e) {}
+        try {var green_color = getValue(openskin.styles[0].greenText, "color")} catch(e) {}
+        try {var blue_color = getValue(openskin.styles[0].blueText, "color")} catch(e) {}
+        try {var button_focus = getValue(openskin.styles[0].buttonFocus, "background")} catch(e) {}
+        // Overrides to make !important somewhat unneeded.
+        try {document.querySelector("input").style.background = getValue(openskin.styles[0].searchbar, "background");} catch(e) {}
+        try {document.querySelector("input").style.color = getValue(openskin.styles[0].searchbar, "color")} catch(e) {}
+        try {document.querySelector("html").style.background = getValue(openskin.styles[0].containerBackground, "background")} catch(e) {}
+        try {document.querySelector("html").style.color = getValue(openskin.styles[0].label, "color")} catch(e) {}
+        // // Apply theme (non-OpenSkin)
+        var style = document.createElement("style");
+        style.id = "openskin_stylesheet";
+        stylesheet = ""
+        try {stylesheet += "html {" + openskin.styles[0].containerBackground + ";"} catch(e) {}
+        try {stylesheet += openskin.styles[0].label + "} .sub.sub, #clock#clock {"} catch(e) {}
+        try {stylesheet += openskin.styles[0].caption + "} .btn.btn {"} catch(e) {}
+        try {stylesheet += openskin.styles[0].button + "} .btn:hover.btn:hover {"} catch(e) {}
+        try {stylesheet += openskin.styles[0].buttonHover + "} input:focus {"} catch(e) {}
+        try {stylesheet += openskin.styles[0].searchbarFocus + "} .btn.btn > a {"} catch(e) {}
+        try {stylesheet += openskin.styles[0].icon + "}"} catch(e) {}
+        try {stylesheet += openskin.styles[0].custom[0].casa} catch(e) {}
+        style.innerHTML = stylesheet;
+        document.head.appendChild(style);
+    </script>
+    <link rel="stylesheet" href="fa5.css" media="none" onload="if(media!='all')media='all'">
+    <script type="text/javascript" async>
+        clock();
+        hello();
+        var url = window.location.href;
+        music();
+        var searchBox = document.getElementById("search");
+        var defaultLabel = "bookmarks";
+
+        // Toggle Auto-complete.
+        var isAutoComplete = true;
+
+        // Data
+        var data = {
+           "Twitter": {
+               "url": "https://mobile.twitter.com",
+               "icon": "fab fa-twitter",
+               "is_fa": "true",
+               "is_visible": "true",
+               "shortcut": ["t","tw","twitter"]
+           },
+           "Reddit": {
+               "url": "https://old.reddit.com",
+               "icon": "fab fa-reddit",
+               "is_fa": "true",
+               "is_visible": "true",
+               "shortcut": ["r","re","rd","reddit"]
+           },
+           "MyAnimeList": {
+               "url": "https://myanimelist.net/animelist/HeyItsShuga",
+               "icon": "ツ",
+               "is_fa": "false",
+               "is_visible": "true",
+               "shortcut": ["mal","my_anime_list","myanimelist","weeb"]
+           }
+       }
+
+        // Data organization
+        var labels = Object.keys(data);
+        var aliases = []
+        for (var x = labels.length - 1; x >= 0; x--) {
+            sc = data[labels[x]].shortcut;
+            for (var y = sc.length - 1; y >= 0; y--) {
+                aliases.push(sc[y]);
+            }
+        }
+
+        // Build Bookmarks
+        for (var x = 0; x < labels.length; x++) {
+            sc = data[labels[x]].shortcut;
+            tags = ""
+            for (var y = sc.length - 1; y >= 0; y--) {
+                tags += " tag-" + sc[y]
+            }
+            if(data[labels[x]].is_fa == "true" && data[labels[x]].is_visible == "true") {
+                document.getElementById("links").innerHTML += '<div onmouseover="tooltip(\''+labels[x].toLowerCase()+'\')" onmouseout="tooltip(defaultLabel)" class="btn box'+tags+'"><a aria-hidden="true" class="'+data[labels[x]].icon+'" href="'+data[labels[x]].url+'"></a></div>';
+            } else if(data[labels[x]].is_visible == "true") {
+                document.getElementById("links").innerHTML += '<div onmouseover="tooltip(\''+labels[x].toLowerCase()+'\')" onmouseout="tooltip(defaultLabel)" class="btn box'+tags+'"><a href="'+data[labels[x]].url+'">'+data[labels[x]].icon+'</a></div>';
+            }
+        }
+
+        // Search
+        function search() {
+            var query = searchBox.value;
+            if(query.indexOf("http")==0 || query.indexOf("://")!=-1) {
+                window.location = query;
+            } else if(query.indexOf(".")!=-1 && query.indexOf(" ")==-1) {
+                window.location = "https://" + query;
+            } else if(aliases.search(query)) {
+                // Alias -> URL
+                for (var x = labels.length - 1; x >= 0; x--) {
+                    sc = data[labels[x]].shortcut;
+                    for (var y = sc.length - 1; y >= 0; y--) {
+                        if(sc[y] == query) {
+                            window.location = data[labels[x]].url;
+                        }
+                    }
+                }
+            } else {
+                window.location = "https://duckduckgo.com?q=" + query.replace("&","%26");
+            }
+        }
+
+        searchBox.addEventListener("keyup", function (e) {
+            searchBox.style.color = textbox_text;
+            // Green highlight
+            var query = searchBox.value;
+            for(str in aliases) {
+                if(aliases[str] == query.toLowerCase()) {
+                    searchBox.style.color = green_color;
+                } else {
+                    // Reset bookmark highlight
+                    try { document.querySelector(".tag-" + aliases[str].toLowerCase()).style.background = button; } catch(err) {}
+                }
+            }
+            // Bookmark highlight
+            try { document.querySelector(".tag-" + query.toLowerCase()).style.background = button_focus; } catch(err) {}
+            // Blue highlight
+            if((query.indexOf(".")!=-1 && query.indexOf(" ")==-1) || query.indexOf("://")!=-1 || query.indexOf("http")==0) {
+                searchBox.style.color = blue_color;
+            }
+            // Press Enter to search
+            if (e.keyCode == 13) {
+                search();
+            } else if (e.keyCode == 38 && isAutoComplete) {
+                window.location='https://duckduckgo.com?q='+document.getElementById("ac-0").innerHTML.replace("&amp;","%26");
+            } else if (e.keyCode == 40 && isAutoComplete) {
+                 window.location='https://duckduckgo.com?q='+document.getElementById("ac-1").innerHTML.replace("&amp;","%26");
+            }
+
+            if(isAutoComplete) {
+                autocomplete()
+            }
+        })
+
+        function autocomplete() {
+            var query = searchBox.value;
+            if(query != "") {
+                document.getElementById("ac-0").style.display = "inline-block";
+                document.getElementById("ac-1").style.display = "inline-block";
+                document.getElementById("clock").style.display = "none";
+                var req = new XMLHttpRequest();
+                req.open("GET", url + 'api.php?dl=https://duckduckgo.com/ac/?q=' + query.replace("&","").replace("\"",""), true);
+                req.onload = function (e) {
+                  if (req.readyState === 4) {
+                    if (req.status === 200) {
+                      resp = JSON.parse(req.responseText);
+                      for(i=0;i<2;i++) {
+                        try {
+                            document.getElementById("ac-"+i).innerHTML = resp[i].phrase;
+                        } catch(err) {
+                            document.getElementById("ac-0").style.display = "none";
+                            document.getElementById("ac-1").style.display = "none";
+                            document.getElementById("clock").style.display = "inline-block"
+                        }
+                      }
+                    } else {
+                        console.warn("[Casa] Autocomplete disabled.");
+                        isAutoComplete = false;
+                        document.getElementById("ac-0").style.display = "none";
+                        document.getElementById("ac-1").style.display = "none";
+                        document.getElementById("clock").style.display = "inline-block"
+                    }
+                  }
+                };
+                req.send(); 
+            } else {
+                document.getElementById("ac-0").style.display = "none";
+                document.getElementById("ac-1").style.display = "none";
+                document.getElementById("clock").style.display = "inline-block";
+            }
+        }
+
+        // Tooltip editor
+        function tooltip(str) {
+            document.getElementById("tooltip").innerHTML = str;
+        }
+        tooltip(defaultLabel);
+
+        function clock() {
+            var hour = new Date(Date.now()).getHours();
+            var min = new Date(Date.now()).getMinutes();
+            var sec = new Date(Date.now()).getSeconds();
+            if(min < 10) {
+                min = "0" + min;
+            }
+            if(sec < 10) {
+                sec = "0" + sec;
+            }
+            if(hour > 12) {
+                hour -= 12;
+                var suffix = "pm";
+            } else {
+                suffix = "am";
+            }
+            var timeStr = hour + "." + min + "." + sec + " " + suffix;
+            document.getElementById("clock").innerHTML = timeStr;
+            return timeStr;
+        }
+
+        function music() {
+            var req = new XMLHttpRequest();
+            req.open("GET", url + 'api.php?q=current', true);
+            req.onload = function (e) {
+              if (req.readyState === 4) {
+                if (req.status === 200) {
+                    defaultLabel = req.responseText.toLowerCase();
+                    document.getElementById("tooltip").onclick = function() {window.location = "https://duckduckgo.com?q=" + this.innerHTML.replace("&","%26")}
+                    document.getElementById("tooltip").style.cursor = "pointer";
+                    if(defaultLabel == "—" || defaultLabel.indexOf("—") == -1) {
+                        defaultLabel = "bookmarks";
+                        document.getElementById("tooltip").onclick = function() {}
+                        document.getElementById("tooltip").style.cursor = "default";
+                    }
+                    tooltip(defaultLabel);
+                } else {
+                    clearInterval(musicTimer);
+                    console.warn("[Casa] iTunes integration disabled.");
+                }
+              }
+            };
+            req.send();
+        }
+
+        function hello() {
+            // Add custom phrases to the title rotation.
+            var phrases = ["welcome.","bienvenido.","bienvenue.","bem vinda.","receperint.","willkommen.","fáilte.","benvenuto.","velkommen.","welkom.","καλως ηρθατε.","أهلا بك.","Добро пожаловать.","欢迎。","ようこそ。","환영."];
+            num = Math.floor(Math.random()*phrases.length);
+            document.getElementById("hello").innerHTML = phrases[num];
+        }
+
+        // Array search
+        Array.prototype.search = function(str) {
+          for (var i = this.length - 1; i >= 0; i--) {
+            if(this[i] == str) {
+              return i;
+            }
+          }
+        }
+
+        window.setInterval(clock, 500);
+        musicTimer = window.setInterval(music, 2000);
+    </script>
+</html>
